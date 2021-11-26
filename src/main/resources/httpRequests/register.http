@@ -1,0 +1,17 @@
+POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/register
+Content-Type: application/json
+
+{
+  "firstname": "testvorname",
+  "lastname": "testnachname",
+  "username": "testusername",
+  "password": "testpassword"
+}
+
+<> 2021-11-26T193402.200.txt
+<> 2021-11-26T193132.200.txt
+<> 2021-11-26T192819.400.html
+
+###
+###
+POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/register
