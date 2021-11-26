@@ -140,3 +140,4 @@ buildNumber.properties
 .classpath
 
 # End of https://www.toptal.com/developers/gitignore/api/java,maven,intellij+all
+.idea/runConfigurations/JBoss_WildFly_25_0_1_Final.xml
