@@ -1,6 +1,9 @@
 package at.ac.fhcampuswien.usermanagement;
 
+import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
+
 import javax.ws.rs.*;
+import javax.ws.rs.core.MediaType;
 
 @Path("/hello-world")
 public class HelloResource {
@@ -22,6 +25,15 @@ public class HelloResource {
     public String login(@PathParam("username")String username, @PathParam("password")String password) {
         return username + password;
 
+    }
+
+    @POST
+    @Path("/register")
+    @Consumes(MediaType.APPLICATION_JSON)
+    @Produces("text/plain")
+    public String register(NewUserDTO newUserDTO) {
+
+        return newUserDTO.getLastname();
     }
 
 }
