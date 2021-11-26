@@ -16,4 +16,12 @@ public class HelloResource {
     public String hello(@PathParam("name") String name) {
         return "Hello " + name;
     }
+    @GET
+    @Path("/{username}/{password}")
+    @Produces("text/plain")
+    public String login(@PathParam("username")String username, @PathParam("password")String password) {
+        return username + password;
+
+    }
+
 }
