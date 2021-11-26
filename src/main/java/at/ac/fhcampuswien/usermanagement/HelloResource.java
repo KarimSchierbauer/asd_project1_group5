@@ -1,8 +1,6 @@
 package at.ac.fhcampuswien.usermanagement;
 
-import javax.ws.rs.GET;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 
 @Path("/hello-world")
 public class HelloResource {
@@ -10,5 +8,12 @@ public class HelloResource {
     @Produces("text/plain")
     public String hello() {
         return "Hello, World!";
+    }
+
+    @GET
+    @Path("/{name}")
+    @Produces("text/plain")
+    public String hello(@PathParam("name") String name) {
+        return "Hello " + name;
     }
 }
