@@ -1,0 +1,16 @@
+CREATE DATABASE db_userManager;
+CREATE SCHEMA userSchema;
+
+CREATE TABLE userSchema.userEntity (
+    id serial primary key,
+    firstname varchar(50),
+    lastname varchar(50),
+    username varchar(50),
+    password varchar(50)
+);
+
+INSERT INTO userSchema.userEntity(firstname, lastname, username, password)
+values ('Maximilian', 'Mustermann', 'maximusPrime', 'MustMaxi:3');
+
+SELECT*
+FROM userSchema.userEntity
