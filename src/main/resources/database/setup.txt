@@ -6,7 +6,7 @@ CREATE TABLE userSchema.userEntity (
     firstname varchar(50),
     lastname varchar(50),
     username varchar(50),
-    password varchar(50)
+    password varchar(100)
 );
 
 INSERT INTO userSchema.userEntity(firstname, lastname, username, password)
