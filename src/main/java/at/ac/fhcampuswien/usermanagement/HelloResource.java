@@ -1,5 +1,6 @@
 package at.ac.fhcampuswien.usermanagement;
 
+import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 
 import javax.ws.rs.*;
@@ -32,7 +33,7 @@ public class HelloResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
     public String register(NewUserDTO newUserDTO) {
-
+        new UserService().insertUser(newUserDTO);
         return newUserDTO.getLastname();
     }
 
