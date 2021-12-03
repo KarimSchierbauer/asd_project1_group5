@@ -2,6 +2,7 @@ package at.ac.fhcampuswien.usermanagement;
 
 import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
+import at.ac.fhcampuswien.usermanagement.util.Session;
 import at.ac.fhcampuswien.usermanagement.util.SessionUtility;
 
 
@@ -12,6 +13,8 @@ import java.util.UUID;
 
 @Path("/hello-world")
 public class HelloResource {
+    private final String SessionHeader = "SessionId";
+
     @GET
     @Produces("text/plain")
     public String hello() {
@@ -36,7 +39,7 @@ public class HelloResource {
 
             message = "User erfolgreich angelegt";
             UUID sessionId = SessionUtility.createNewSessionForUser(newUserDTO);
-            return Response.status(Response.Status.OK).entity(message).header("sessionId", sessionId).build();
+            return Response.status(Response.Status.OK).entity(message).header(SessionHeader, sessionId).build();
         }
         message = "Username existiert bereits";
         return Response.status(Response.Status.CONFLICT).entity(message).build();
@@ -50,7 +53,7 @@ public class HelloResource {
         if(new UserService().checkUser(newUserDTO)){
             message = "User erfolgreich eingeloggt";
             UUID sessionId = SessionUtility.createNewSessionForUser(newUserDTO);
-            return Response.status(Response.Status.OK).entity(message).header("sessionId", sessionId).build();
+            return Response.status(Response.Status.OK).entity(message).header(SessionHeader, sessionId).build();
         }
         message = "Username oder Passwort nicht korrekt";
         return Response.status(Response.Status.UNAUTHORIZED).entity(message).build();
@@ -59,11 +62,11 @@ public class HelloResource {
     @GET
     @Path("/isSessionActive")
     @Produces("text/plain")
-    public Response isSessionActive(@HeaderParam("sessionId") UUID sessionId){
+    public Response isSessionActive(@HeaderParam(SessionHeader) UUID sessionId){
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("missing header 'sessionId'")
+                    .entity("missing header '" + SessionHeader + "'")
                     .build();
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
@@ -77,6 +80,31 @@ public class HelloResource {
             return Response
                     .status(Response.Status.UNAUTHORIZED)
                     .entity("Session is not valid")
+                    .build();
+        }
+    }
+
+    @POST
+    @Path("/logout")
+    @Produces("text/plain")
+    public Response logout(@HeaderParam(SessionHeader) UUID sessionId){
+        if (sessionId == null)
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("missing header '" + SessionHeader + "'")
+                    .build();
+
+        if (SessionUtility.isSessionStillActive(sessionId)) {
+            SessionUtility.closeSession(sessionId);
+            return Response
+                    .status(Response.Status.OK)
+                    .entity("Successfully logged out")
+                    .build();
+        }
+        else {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Bad SessionId")
                     .build();
         }
     }

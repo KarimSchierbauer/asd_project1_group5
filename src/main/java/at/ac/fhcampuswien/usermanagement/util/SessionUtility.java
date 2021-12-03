@@ -33,6 +33,11 @@ public class SessionUtility {
         return null;
     }
 
+    public static void closeSession(UUID sessionId){
+        if(_sessions.containsKey(sessionId))
+            _sessions.remove(sessionId);
+    }
+
     public static Date currentDate(){
         Calendar currentDate = Calendar.getInstance();
         return currentDate.getTime();
