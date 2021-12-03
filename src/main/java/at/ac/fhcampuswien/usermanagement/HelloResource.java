@@ -32,17 +32,23 @@ public class HelloResource {
         String message;
         if(didWork) {
             message = "User erfolgreich angelegt";
-            return Response.status(Response.Status.ACCEPTED).entity(message).build();
+            return Response.status(Response.Status.OK).entity(message).build();
         }
         message = "Username existiert bereits";
-        return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
+        return Response.status(Response.Status.CONFLICT).entity(message).build();
     }
 
     @GET
     @Path("/login")
     @Produces("text/plain")
-    public String login(NewUserDTO newUserDTO) {
-        return newUserDTO.getUsername() + " " + newUserDTO.getPassword();
+    public Response login(NewUserDTO newUserDTO) {
+        String message;
+        if(new UserService().checkUser(newUserDTO)){
+            message = "User erfolgreich eingeloggt";
+            return Response.status(Response.Status.OK).entity(message).build();
+        }
+        message = "Username oder Passwort nicht korrekt";
+        return Response.status(Response.Status.UNAUTHORIZED).entity(message).build();
     }
 
 }

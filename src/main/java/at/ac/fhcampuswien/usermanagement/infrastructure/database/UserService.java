@@ -25,9 +25,9 @@ public class UserService {
         Connection connection = getConnection();
         boolean usernameTaken= compareUsername(newUserDTO.getUsername());
         if(!usernameTaken){
-            String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s' );";
-
-            String hashpw = utility.hashPW(newUserDTO.getPassword());
+            String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password,salt) VALUES ('%s', '%s', '%s', '%s' , '%s');";
+            String salt = utility.saltGenerator();
+            String hashpw = utility.hashPW(newUserDTO.getPassword(), salt);
 
             //if (BCrypt.checkpw(newUserDTO.getPassword(), hashpw)) {
             //    System.out.println("Password is fine");
@@ -35,7 +35,7 @@ public class UserService {
 
             try {
                 Statement stmt = connection.createStatement();
-                String sql = String.format(rawCommand, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashpw);
+                String sql = String.format(rawCommand, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashpw, salt);
                 System.out.println(sql);
                 stmt.executeUpdate(sql);
                 connection.close();
@@ -51,7 +51,6 @@ public class UserService {
 
     public boolean compareUsername(String username){
         Connection connection = getConnection();
-        boolean nameTaken;
 
         try {
             PreparedStatement rawCommand = connection.prepareStatement("SELECT username FROM userSchema.userEntity WHERE username=?");
@@ -59,9 +58,9 @@ public class UserService {
             ResultSet rs = rawCommand.executeQuery();
             while (rs.next()) {
                 if (rs.getString("username") == null || rs.getString("username").isEmpty()) {
-                    return nameTaken = false;
+                    return false;
                 } else {
-                    return nameTaken = true;
+                    return true;
                 }
             }
             rawCommand.close();
@@ -72,29 +71,27 @@ public class UserService {
         return false;
     }
 
-    public boolean compareUser(NewUserDTO newUserDTO) {
+    public boolean checkUser(NewUserDTO newUserDTO) {
         Connection connection = getConnection();
 
-        String hashpw = utility.hashPW(newUserDTO.getPassword());
-        boolean passEqual;
-
         try {
-            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=? AND password=?");
+            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password, salt FROM userSchema.userEntity WHERE username=?");
             rawCommand.setString(1, newUserDTO.getUsername());
-            rawCommand.setString(2, hashpw);
             ResultSet rs = rawCommand.executeQuery();
+            while (rs.next()) {
+                if (rs.getString("username") == newUserDTO.getUsername() &&
+                        (utility.hashPW(newUserDTO.getPassword(), rs.getString("salt")) == rs.getString("password"))) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
             rawCommand.close();
             connection.close();
-            rs.last();
-            if(rs.getRow() > 0){
-                return passEqual = true;
-            }else{
-                return passEqual = false;
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return true;
+        return false;
     }
 
 }
