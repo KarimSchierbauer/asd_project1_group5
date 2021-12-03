@@ -3,8 +3,10 @@ package at.ac.fhcampuswien.usermanagement;
 import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 
+
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
 @Path("/hello-world")
 public class HelloResource {
@@ -32,9 +34,15 @@ public class HelloResource {
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
-    public String register(NewUserDTO newUserDTO) {
-        new UserService().insertUser(newUserDTO);
-        return newUserDTO.getLastname();
+    public Response.Status register(NewUserDTO newUserDTO) {
+        boolean didWork = new UserService().insertUser(newUserDTO);
+        Response.Status responseStatus = null;
+        if(didWork) {
+            responseStatus = Response.Status.ACCEPTED;
+            return responseStatus;
+        }
+        responseStatus = Response.Status.BAD_REQUEST;
+        return responseStatus;
     }
 
 }
