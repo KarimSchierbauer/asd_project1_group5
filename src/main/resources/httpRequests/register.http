@@ -21,3 +21,8 @@ Content-Type: application/json
   "username": "aoeu",
   "password": "aoeu"
 }
+
+###
+###
+GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/isSessionActive
+sessionId: fd83f1c0-7516-47da-92a7-c6801350e545
