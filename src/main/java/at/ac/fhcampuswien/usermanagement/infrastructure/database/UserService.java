@@ -25,9 +25,8 @@ public class UserService {
         Connection connection = getConnection();
         boolean usernameTaken= compareUsername(newUserDTO.getUsername());
         if(!usernameTaken){
-            String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password,salt) VALUES ('%s', '%s', '%s', '%s' , '%s');";
-            String salt = utility.saltGenerator();
-            String hashpw = utility.hashPW(newUserDTO.getPassword(), salt);
+            String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s');";
+            String hashpw = utility.hashPW(newUserDTO.getPassword());
 
             //if (BCrypt.checkpw(newUserDTO.getPassword(), hashpw)) {
             //    System.out.println("Password is fine");
@@ -35,7 +34,7 @@ public class UserService {
 
             try {
                 Statement stmt = connection.createStatement();
-                String sql = String.format(rawCommand, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashpw, salt);
+                String sql = String.format(rawCommand, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashpw);
                 System.out.println(sql);
                 stmt.executeUpdate(sql);
                 connection.close();
@@ -75,12 +74,11 @@ public class UserService {
         Connection connection = getConnection();
 
         try {
-            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password, salt FROM userSchema.userEntity WHERE username=?");
+            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=?");
             rawCommand.setString(1, newUserDTO.getUsername());
             ResultSet rs = rawCommand.executeQuery();
             while (rs.next()) {
-                if (rs.getString("username") == newUserDTO.getUsername() &&
-                        (utility.hashPW(newUserDTO.getPassword(), rs.getString("salt")) == rs.getString("password"))) {
+                if (rs.getString("username") == newUserDTO.getUsername() && utility.checkPW(newUserDTO.getPassword(), rs.getString("password"))) {
                     return true;
                 } else {
                     return false;
