@@ -14,6 +14,7 @@ import java.util.UUID;
 @Path("/hello-world")
 public class HelloResource {
     private final String SessionHeader = "SessionId";
+    private final String TransactionHeader = "TransactionId";
 
     @GET
     @Produces("text/plain")
@@ -109,4 +110,46 @@ public class HelloResource {
         }
     }
 
+    @DELETE
+    @Path("/account")
+    @Produces("text/plain")
+    public Response deleteAccount(@HeaderParam(SessionHeader) UUID sessionId, @HeaderParam(TransactionHeader) UUID transactionId){
+        if (sessionId == null)
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("missing header '" + SessionHeader + "'")
+                    .build();
+
+        if(transactionId == null){
+            return Response
+                    .status(Response.Status.OK)
+                    .entity("Wollen Sie den Account wirklich löschen? Sind Sie sich den Konsequenzen bewusst? Verstehen Sie was Sie tun?")
+                    .header(TransactionHeader, UUID.randomUUID())
+                    .build();
+        }
+
+        if (SessionUtility.isSessionStillActive(sessionId)) {
+            NewUserDTO user = SessionUtility.getUser(sessionId);
+            boolean b = new UserService().deleteUser(user.getUsername());
+            if (b){
+                SessionUtility.closeSession(sessionId);
+                return Response
+                        .status(Response.Status.OK)
+                        .entity("Successfully deleted User")
+                        .build();
+            }
+            else {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Couldn't delete user")
+                        .build();
+            }
+        }
+        else {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Bad SessionId")
+                    .build();
+        }
+    }
 }

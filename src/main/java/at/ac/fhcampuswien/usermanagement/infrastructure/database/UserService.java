@@ -93,4 +93,20 @@ public class UserService {
         return false;
     }
 
+    public boolean deleteUser(String username){
+        Connection connection = getConnection();
+
+        try {
+            PreparedStatement rawCommand = connection.prepareStatement("DELETE FROM userSchema.userEntity WHERE username = ?");
+            rawCommand.setString(1, username);
+            int updatedRows = rawCommand.executeUpdate();
+            rawCommand.close();
+            connection.close();
+            return updatedRows > 0;
+        }
+        catch (SQLException e){
+            e.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -25,9 +25,23 @@ Content-Type: application/json
 ###
 ###
 GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/isSessionActive
-sessionId: 036f08b2-89fc-4b78-8fae-84ec428699d3
+SessionId: b000aca8-02c0-46e2-bc8b-f104580e85ae
 
 ###
 ###
 POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/logout
-sessionId: 036f08b2-89fc-4b78-8fae-84ec42864566
+SessionId: b000aca8-02c0-46e2-bc8b-f104580e85ae
+
+###
+###
+DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/account
+SessionId: 98075ae6-ed19-4233-b082-22af0d776e03
+Content-Type: application/json
+
+
+###
+###
+DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/account
+SessionId: 98075ae6-ed19-4233-b082-22af0d776e03
+TransactionId: 036f08b2-89fc-4b78-8fae-84ec42864566
+Content-Type: application/json
