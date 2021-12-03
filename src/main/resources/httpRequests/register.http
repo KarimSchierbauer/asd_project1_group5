@@ -4,7 +4,7 @@ Content-Type: application/json
 {
   "firstname": "testvorname",
   "lastname": "testnachname",
-  "username": "testusername",
+  "username": "testusername2",
   "password": "testpassword"
 }
 
@@ -14,4 +14,10 @@ Content-Type: application/json
 
 ###
 ###
-POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/register
+GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/login
+Content-Type: application/json
+
+{
+  "username": "testusername2",
+  "password": "testpassword"
+}

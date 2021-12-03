@@ -43,7 +43,6 @@ public class UserService {
                 e.printStackTrace();
             }
         }else{
-            System.out.println("Username is already taken. Try again.");
             return false;
         }
 
@@ -60,12 +59,8 @@ public class UserService {
             ResultSet rs = rawCommand.executeQuery();
             while (rs.next()) {
                 if (rs.getString("username") == null || rs.getString("username").isEmpty()) {
-                    //TODO: replace System.out.println with exception \n
-                    // --> error message must be shown in window
-                    System.out.println("Username is not taken");
                     return nameTaken = false;
                 } else {
-                    System.out.println("Username " + username + " is already taken. Try again.");
                     return nameTaken = true;
                 }
             }
@@ -77,18 +72,29 @@ public class UserService {
         return false;
     }
 
-//    public void compareUser(NewUserDTO newUserDTO){
-//        //Connection connection = getConnection();
-//
-//        String hashpw = utility.hashPW(newUserDTO.getPassword());
-//
-//        try {
-//            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=? AND password=?");
-//            rawCommand.setString(1, newUserDTO.getUsername());
-//            rawCommand.setString(2, hashpw);
-//            ResultSet rs = rawCommand.executeQuery();
-//        } catch (SQLException e) {
-//            e.printStackTrace();
-//        }
+    public boolean compareUser(NewUserDTO newUserDTO) {
+        Connection connection = getConnection();
+
+        String hashpw = utility.hashPW(newUserDTO.getPassword());
+        boolean passEqual;
+
+        try {
+            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=? AND password=?");
+            rawCommand.setString(1, newUserDTO.getUsername());
+            rawCommand.setString(2, hashpw);
+            ResultSet rs = rawCommand.executeQuery();
+            rawCommand.close();
+            connection.close();
+            rs.last();
+            if(rs.getRow() > 0){
+                return passEqual = true;
+            }else{
+                return passEqual = false;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
 
 }

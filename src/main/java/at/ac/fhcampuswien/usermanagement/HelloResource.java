@@ -22,27 +22,27 @@ public class HelloResource {
     public String hello(@PathParam("name") String name) {
         return "Hello " + name;
     }
-    @GET
-    @Path("/{username}/{password}")
-    @Produces("text/plain")
-    public String login(@PathParam("username")String username, @PathParam("password")String password) {
-        return username + password;
-
-    }
 
     @POST
     @Path("/register")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
-    public Response.Status register(NewUserDTO newUserDTO) {
+    public Response register(NewUserDTO newUserDTO) {
         boolean didWork = new UserService().insertUser(newUserDTO);
-        Response.Status responseStatus = null;
+        String message;
         if(didWork) {
-            responseStatus = Response.Status.ACCEPTED;
-            return responseStatus;
+            message = "User erfolgreich angelegt";
+            return Response.status(Response.Status.ACCEPTED).entity(message).build();
         }
-        responseStatus = Response.Status.BAD_REQUEST;
-        return responseStatus;
+        message = "Username existiert bereits";
+        return Response.status(Response.Status.BAD_REQUEST).entity(message).build();
+    }
+
+    @GET
+    @Path("/login")
+    @Produces("text/plain")
+    public String login(NewUserDTO newUserDTO) {
+        return newUserDTO.getUsername() + " " + newUserDTO.getPassword();
     }
 
 }
