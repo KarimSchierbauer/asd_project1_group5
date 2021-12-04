@@ -45,3 +45,14 @@ DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/account
 SessionId: 98075ae6-ed19-4233-b082-22af0d776e03
 TransactionId: 036f08b2-89fc-4b78-8fae-84ec42864566
 Content-Type: application/json
+
+###
+###
+PUT http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/updatePW
+SessionId: 8e321e3d-edec-488a-b4c7-94e3c9b065c2
+Content-Type: application/json
+
+{
+  "password1": "aoeu1",
+  "password2": "aoeu1"
+}

@@ -1,7 +1,7 @@
 package at.ac.fhcampuswien.usermanagement.infrastructure.database;
 
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
-import at.ac.fhcampuswien.usermanagement.util.utility;
+import at.ac.fhcampuswien.usermanagement.util.Utility;
 
 import java.sql.*;
 
@@ -29,7 +29,7 @@ public class UserService {
         }
 
         String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s');";
-        String hashpw = utility.hashPW(newUserDTO.getPassword());
+        String hashpw = Utility.hashPW(newUserDTO.getPassword());
 
         try {
             Statement stmt = connection.createStatement();
@@ -81,7 +81,7 @@ public class UserService {
                     continue;
                 }
                 String passwordFromDb = rs.getString("password");
-                if (utility.checkPW(newUserDTO.getPassword(), passwordFromDb)) {
+                if (Utility.checkPW(newUserDTO.getPassword(), passwordFromDb)) {
                     return true;
                 }
             }
@@ -107,6 +107,28 @@ public class UserService {
         catch (SQLException e){
             e.printStackTrace();
         }
+        return false;
+    }
+
+    public boolean changePW(NewUserDTO newUserDTO, String password){
+        Connection connection = getConnection();
+        newUserDTO.setPassword(password);
+        String newHashedPW = Utility.hashPW(newUserDTO.getPassword());
+
+        try{
+            PreparedStatement rawCommand = connection.prepareStatement("UPDATE userSchema.userEntity SET password = ? WHERE username = ?");
+            rawCommand.setString(1, newHashedPW);
+            rawCommand.setString(2, newUserDTO.getUsername());
+            rawCommand.executeUpdate();
+            boolean b = (checkUser(newUserDTO));
+            rawCommand.close();
+            connection.close();
+            return b;
+        }
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+
         return false;
     }
 }

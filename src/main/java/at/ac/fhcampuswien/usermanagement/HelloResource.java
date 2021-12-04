@@ -2,8 +2,8 @@ package at.ac.fhcampuswien.usermanagement;
 
 import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
-import at.ac.fhcampuswien.usermanagement.util.Session;
 import at.ac.fhcampuswien.usermanagement.util.SessionUtility;
+import at.ac.fhcampuswien.usermanagement.util.Utility;
 
 
 import javax.ws.rs.*;
@@ -56,6 +56,7 @@ public class HelloResource {
             UUID sessionId = SessionUtility.createNewSessionForUser(newUserDTO);
             return Response.status(Response.Status.OK).entity(message).header(SessionHeader, sessionId).build();
         }
+        //TODO: implement method to check max. 3 login tries
         message = "Username oder Passwort nicht korrekt";
         return Response.status(Response.Status.UNAUTHORIZED).entity(message).build();
     }
@@ -113,6 +114,7 @@ public class HelloResource {
     @DELETE
     @Path("/account")
     @Produces("text/plain")
+    @Consumes(MediaType.APPLICATION_JSON)
     public Response deleteAccount(@HeaderParam(SessionHeader) UUID sessionId, @HeaderParam(TransactionHeader) UUID transactionId){
         if (sessionId == null)
             return Response
@@ -146,6 +148,50 @@ public class HelloResource {
             }
         }
         else {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Bad SessionId")
+                    .build();
+        }
+    }
+
+    @PUT
+    @Path("/updatePW")
+    @Produces("text/plain")
+    public Response updatePW(@HeaderParam(SessionHeader) UUID sessionId, String password1, String password2) {
+        if (sessionId == null)
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("missing header '" + SessionHeader + "'")
+                    .build();
+
+        if (SessionUtility.isSessionStillActive(sessionId)) {
+            NewUserDTO user = SessionUtility.getUser(sessionId);
+            if (Utility.checkStringNotEmpty(password1) || Utility.checkStringNotEmpty(password1)) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Eines der Passwörter ist leer")
+                        .build();
+            }
+            if (!Utility.checkIdenticalPW(password1, password2)) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Kennwörter nicht gleich ausgeben")
+                        .build();
+            } else {
+                boolean didWork = new UserService().changePW(user, password1);
+                if(didWork){
+                    return Response
+                            .status(Response.Status.OK)
+                            .entity("Passwort wurde erfolgreich geändert")
+                            .build();
+                }
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Ein Fehler ist aufgetreten")
+                        .build();
+            }
+        }else {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Bad SessionId")
