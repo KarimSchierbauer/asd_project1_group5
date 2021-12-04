@@ -1,6 +1,7 @@
 package at.ac.fhcampuswien.usermanagement;
 
 import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
+import at.ac.fhcampuswien.usermanagement.models.ChangePasswordDTO;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 import at.ac.fhcampuswien.usermanagement.util.SessionUtility;
 import at.ac.fhcampuswien.usermanagement.util.Utility;
@@ -158,7 +159,7 @@ public class HelloResource {
     @PUT
     @Path("/updatePW")
     @Produces("text/plain")
-    public Response updatePW(@HeaderParam(SessionHeader) UUID sessionId, String password1, String password2) {
+    public Response updatePW(@HeaderParam(SessionHeader) UUID sessionId, ChangePasswordDTO changePasswordDTO) {
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
@@ -167,19 +168,19 @@ public class HelloResource {
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
             NewUserDTO user = SessionUtility.getUser(sessionId);
-            if (Utility.checkStringNotEmpty(password1) || Utility.checkStringNotEmpty(password1)) {
+            if (Utility.checkStringNotEmpty(changePasswordDTO.getPassword1()) || Utility.checkStringNotEmpty(changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Eines der Passwörter ist leer")
                         .build();
             }
-            if (!Utility.checkIdenticalPW(password1, password2)) {
+            if (!Utility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Kennwörter nicht gleich ausgeben")
                         .build();
             } else {
-                boolean didWork = new UserService().changePW(user, password1);
+                boolean didWork = new UserService().changePW(user, changePasswordDTO.getPassword1());
                 if(didWork){
                     return Response
                             .status(Response.Status.OK)

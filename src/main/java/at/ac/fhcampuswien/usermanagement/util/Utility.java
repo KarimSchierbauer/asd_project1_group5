@@ -17,11 +17,10 @@ public class Utility {
     }
 
     public static boolean checkIdenticalPW(String password1, String password2){
-        boolean result = false;
         if(password1.equals(password2)){
-            result = true;
+            return true;
         }
-        return result;
+        return false;
     }
 
     public static boolean checkStringNotEmpty(String text){
