@@ -1,10 +1,17 @@
 package at.ac.fhcampuswien.usermanagement.util;
 
 import org.mindrot.jbcrypt.BCrypt;
-import java.io.FileReader;
+
 import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Utility {
+
+    private static List<String> _passwords;
 
     public static String hashPW(String password){
         String hashpw = BCrypt.hashpw(password, BCrypt.gensalt());
@@ -18,10 +25,26 @@ public class Utility {
     }
 
     public static boolean checkIdenticalPW(String password1, String password2){
-        if(password1.equals(password2)){
-            return true;
+        return password1.equals(password2);
+    }
+
+    private static List<String> getPasswords() throws IOException {
+        if(_passwords == null){
+            ArrayList<String> passwords = new ArrayList<>();
+
+            String file = Utility.class.getResource("/10kcommonPW.txt").getFile();
+            FileReader commonPW = new FileReader(file);
+            BufferedReader commonPWread = new BufferedReader(commonPW);
+
+            String commonPWline = commonPWread.readLine();
+            while (commonPWline != null){
+                passwords.add(commonPWline);
+                commonPWline = commonPWread.readLine();
+            }
+            _passwords = passwords;
         }
-        return false;
+
+        return _passwords;
     }
 
     public static boolean checkPWnotCommon(String password) throws IOException{
@@ -29,16 +52,10 @@ public class Utility {
         if (password.length() <= 3) {
             return false;
         }
-        try (FileReader commonPW = new FileReader("/resources/10kcommonPW.txt") {
-            BufferedReader commonPWread = new BufferedReader(commonPW));
-            String commonPWline = commonPWread.readLine();
-            //Check if password exists in txt-file
-            while (commonPWline != null && !commonPWline.isEmpty()) {
-                if (commonPWline.contains(password)) {
-                    return false;
-                }
-                commonPWline = commonPWread.readLine();
-            }
+
+        try {
+            List<String> passwords = getPasswords();
+            return !passwords.contains(password);
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -48,7 +65,6 @@ public class Utility {
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     public static boolean checkPWtoolong(String password){

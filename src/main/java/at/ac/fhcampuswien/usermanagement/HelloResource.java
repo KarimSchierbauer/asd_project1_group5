@@ -35,6 +35,13 @@ public class HelloResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
     public Response register(NewUserDTO newUserDTO) {
+        if (!Utility.checkPWnotCommon(newUserDTO.getPassword())) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
+                    .build();
+        }
+
         boolean didWork = new UserService().insertUser(newUserDTO);
         String message;
         if(didWork) {
