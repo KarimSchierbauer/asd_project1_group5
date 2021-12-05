@@ -180,6 +180,19 @@ public class HelloResource {
                         .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                         .build();
             }
+            if (Utility.checkPWtoolong(changePasswordDTO.getPassword1()) || Utility.checkPWtoolong(changePasswordDTO.getPassword2())) {
+                return Reponse
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.")
+                        .build();
+            }
+
+            if (!Utility.PWcontainsspecialchars(changePasswordDTO.getPassword1()) || !Utility.PWcontainsspecialchars(changePasswordDTO.getPassword2())) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Passwort muss ein Sonderzeichen enthalten.")
+                        .build();
+            }
             if (!Utility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)

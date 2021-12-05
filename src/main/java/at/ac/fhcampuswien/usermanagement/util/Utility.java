@@ -24,9 +24,9 @@ public class Utility {
         return false;
     }
 
-    public static boolean checkPWnotCommon(String password) throws IOException {
-        //Check if password is empty
-        if (password.length() <= 3 || password.length() > 255) {
+    public static boolean checkPWnotCommon(String password) throws IOException{
+        //Check if password is longer than 3 characters and shorter than 255 characters
+        if (password.length() <= 3) {
             return false;
         }
         try (FileReader commonPW = new FileReader("/resources/10kcommonPW.txt") {
@@ -49,6 +49,22 @@ public class Utility {
             return false;
         }
         return true;
+    }
+
+    public static boolean checkPWtoolong(String password){
+        if (password.length() > 255) {
+            return true
+        }
+    }
+    public static boolean PWcontainsspecialchars(String password){
+        String specialchars = "!@#$%&*()'+,-./:;<=>?[]^_`{|}";
+        for (int i=0; i < password.length(); i++) {
+            char ch = inputString.charAt(i);
+            if(specialchars.contains(Character.toString(ch))) {
+                return true;
+            }
+        }
+        return false
     }
 
     public static boolean checkStringNotEmpty(String text){
