@@ -25,7 +25,7 @@ public class Utility {
     }
 
     public static boolean checkPWnotCommon(String password) throws IOException{
-        //Check if password is longer than 3 characters and shorter than 255 characters
+        //Check if password is longer than 3 characters
         if (password.length() <= 3) {
             return false;
         }
