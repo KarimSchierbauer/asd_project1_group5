@@ -26,7 +26,7 @@ public class Utility {
 
     public static boolean checkPWnotCommon(String password) throws IOException {
         //Check if password is empty
-        if (password.length() <= 3) {
+        if (password.length() <= 3 || password.length() > 255) {
             return false;
         }
         try (FileReader commonPW = new FileReader("/resources/10kcommonPW.txt") {
