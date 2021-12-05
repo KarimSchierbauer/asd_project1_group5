@@ -41,6 +41,12 @@ public class HelloResource {
                     .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                     .build();
         }
+        if (!Utility.PWcontainsspecialchars(newUserDTO.getPassword())) {
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity("Passwort muss ein Sonderzeichen enthalten.")
+                    .build();
+        }
 
         boolean didWork = new UserService().insertUser(newUserDTO);
         String message;
@@ -188,7 +194,7 @@ public class HelloResource {
                         .build();
             }
             if (Utility.checkPWtoolong(changePasswordDTO.getPassword1()) || Utility.checkPWtoolong(changePasswordDTO.getPassword2())) {
-                return Reponse
+                return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.")
                         .build();

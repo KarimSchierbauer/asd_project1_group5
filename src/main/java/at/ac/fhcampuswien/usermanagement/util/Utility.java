@@ -47,7 +47,7 @@ public class Utility {
         return _passwords;
     }
 
-    public static boolean checkPWnotCommon(String password) throws IOException{
+    public static boolean checkPWnotCommon(String password){
         //Check if password is longer than 3 characters
         if (password.length() <= 3) {
             return false;
@@ -68,19 +68,12 @@ public class Utility {
     }
 
     public static boolean checkPWtoolong(String password){
-        if (password.length() > 255) {
-            return true
-        }
+        return password.length() > 255;
     }
+
     public static boolean PWcontainsspecialchars(String password){
-        String specialchars = "!@#$%&*()'+,-./:;<=>?[]^_`{|}";
-        for (int i=0; i < password.length(); i++) {
-            char ch = inputString.charAt(i);
-            if(specialchars.contains(Character.toString(ch))) {
-                return true;
-            }
-        }
-        return false
+        String specialCharacterRegex = ".*[!@#$%*()'+,-./:;<=>?\\[\\]^_`{|}]+.*";
+        return password.matches(specialCharacterRegex);
     }
 
     public static boolean checkStringNotEmpty(String text){
