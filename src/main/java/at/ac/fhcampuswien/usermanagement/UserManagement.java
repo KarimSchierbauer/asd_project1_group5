@@ -5,7 +5,7 @@ import at.ac.fhcampuswien.usermanagement.models.ChangePasswordDTO;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 import at.ac.fhcampuswien.usermanagement.util.LoginLockoutService;
 import at.ac.fhcampuswien.usermanagement.util.SessionUtility;
-import at.ac.fhcampuswien.usermanagement.util.Utility;
+import at.ac.fhcampuswien.usermanagement.util.PasswordUtility;
 
 
 import javax.ws.rs.*;
@@ -13,8 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.UUID;
 
-@Path("/hello-world")
-public class HelloResource {
+@Path("/user")
+public class UserManagement {
     private final String SessionHeader = "SessionId";
     private final String TransactionHeader = "TransactionId";
 
@@ -36,13 +36,13 @@ public class HelloResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
     public Response register(NewUserDTO newUserDTO) {
-        if (!Utility.checkPWnotCommon(newUserDTO.getPassword())) {
+        if (!PasswordUtility.checkPWnotCommon(newUserDTO.getPassword())) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                     .build();
         }
-        if (!Utility.PWcontainsspecialchars(newUserDTO.getPassword())) {
+        if (!PasswordUtility.PWcontainsspecialchars(newUserDTO.getPassword())) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Passwort muss ein Sonderzeichen enthalten.")
@@ -188,32 +188,32 @@ public class HelloResource {
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
             NewUserDTO user = SessionUtility.getUser(sessionId);
-            if (Utility.checkStringNotEmpty(changePasswordDTO.getPassword1()) || Utility.checkStringNotEmpty(changePasswordDTO.getPassword2())) {
+            if (PasswordUtility.checkStringNotEmpty(changePasswordDTO.getPassword1()) || PasswordUtility.checkStringNotEmpty(changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Eines der Passwörter ist leer")
                         .build();
             }
-            if (!Utility.checkPWnotCommon(changePasswordDTO.getPassword1()) || !Utility.checkPWnotCommon(changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.checkPWnotCommon(changePasswordDTO.getPassword1()) || !PasswordUtility.checkPWnotCommon(changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                         .build();
             }
-            if (Utility.checkPWtoolong(changePasswordDTO.getPassword1()) || Utility.checkPWtoolong(changePasswordDTO.getPassword2())) {
+            if (PasswordUtility.checkPWtoolong(changePasswordDTO.getPassword1()) || PasswordUtility.checkPWtoolong(changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.")
                         .build();
             }
 
-            if (!Utility.PWcontainsspecialchars(changePasswordDTO.getPassword1()) || !Utility.PWcontainsspecialchars(changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.PWcontainsspecialchars(changePasswordDTO.getPassword1()) || !PasswordUtility.PWcontainsspecialchars(changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort muss ein Sonderzeichen enthalten.")
                         .build();
             }
-            if (!Utility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Kennwörter nicht gleich ausgeben")

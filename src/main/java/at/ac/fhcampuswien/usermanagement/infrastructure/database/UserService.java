@@ -1,7 +1,7 @@
 package at.ac.fhcampuswien.usermanagement.infrastructure.database;
 
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
-import at.ac.fhcampuswien.usermanagement.util.Utility;
+import at.ac.fhcampuswien.usermanagement.util.PasswordUtility;
 
 import java.sql.*;
 
@@ -29,7 +29,7 @@ public class UserService {
         }
 
         String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s');";
-        String hashpw = Utility.hashPW(newUserDTO.getPassword());
+        String hashpw = PasswordUtility.hashPW(newUserDTO.getPassword());
 
         try {
             Statement stmt = connection.createStatement();
@@ -81,7 +81,7 @@ public class UserService {
                     continue;
                 }
                 String passwordFromDb = rs.getString("password");
-                if (Utility.checkPW(newUserDTO.getPassword(), passwordFromDb)) {
+                if (PasswordUtility.checkPW(newUserDTO.getPassword(), passwordFromDb)) {
                     return true;
                 }
             }
@@ -113,7 +113,7 @@ public class UserService {
     public boolean changePW(NewUserDTO newUserDTO, String password){
         Connection connection = getConnection();
         newUserDTO.setPassword(password);
-        String newHashedPW = Utility.hashPW(newUserDTO.getPassword());
+        String newHashedPW = PasswordUtility.hashPW(newUserDTO.getPassword());
 
         try{
             PreparedStatement rawCommand = connection.prepareStatement("UPDATE userSchema.userEntity SET password = ? WHERE username = ?");

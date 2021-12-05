@@ -1,11 +1,11 @@
-POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/register
+POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/register
 Content-Type: application/json
 
 {
   "firstname": "testvorname",
   "lastname": "testnachname",
-  "username": "aoeu",
-  "password": "aoeu"
+  "username": "aoeuaoeuoaeu",
+  "password": "ao.eu"
 }
 
 <> 2021-11-26T193402.200.txt
@@ -14,39 +14,39 @@ Content-Type: application/json
 
 ###
 ###
-GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/login
+GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/login
 Content-Type: application/json
 
 {
-  "username": "aoeu",
-  "password": "aoeu"
+  "username": "aoeuaoeuoaeu",
+  "password": "ao.eu"
 }
 
 ###
 ###
-GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/isSessionActive
+GET http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/isSessionActive
 SessionId: b000aca8-02c0-46e2-bc8b-f104580e85ae
 
 ###
 ###
-POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/logout
+POST http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/logout
 SessionId: b000aca8-02c0-46e2-bc8b-f104580e85ae
 
 ###
 ###
-DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/account
+DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/account
 SessionId: 98075ae6-ed19-4233-b082-22af0d776e03
 
 
 ###
 ###
-DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/account
+DELETE http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/account
 SessionId: 98075ae6-ed19-4233-b082-22af0d776e03
 TransactionId: 036f08b2-89fc-4b78-8fae-84ec42864566
 
 ###
 ###
-PUT http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/hello-world/updatePW
+PUT http://localhost:8080/usermanagement-1.0-SNAPSHOT/api/user/updatePW
 SessionId: 8e321e3d-edec-488a-b4c7-94e3c9b065c2
 Content-Type: application/json
 

@@ -5,11 +5,10 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Utility {
+public class PasswordUtility {
 
     private static List<String> _passwords;
 
@@ -32,7 +31,7 @@ public class Utility {
         if(_passwords == null){
             ArrayList<String> passwords = new ArrayList<>();
 
-            String file = Utility.class.getResource("/10kcommonPW.txt").getFile();
+            String file = PasswordUtility.class.getResource("/10kcommonPW.txt").getFile();
             FileReader commonPW = new FileReader(file);
             BufferedReader commonPWread = new BufferedReader(commonPW);
 
