@@ -1,7 +1,8 @@
 package at.ac.fhcampuswien.usermanagement.util;
 
 import org.mindrot.jbcrypt.BCrypt;
-
+import java.io.FileReader;
+import java.io.BufferedReader;
 
 public class Utility {
 
@@ -21,6 +22,33 @@ public class Utility {
             return true;
         }
         return false;
+    }
+
+    public static boolean checkPWnotCommon(String password) throws IOException {
+        //Check if password is empty
+        if (password.length() <= 3) {
+            return false;
+        }
+        try (FileReader commonPW = new FileReader("/resources/10kcommonPW.txt") {
+            BufferedReader commonPWread = new BufferedReader(commonPW));
+            String commonPWline = commonPWread.readLine();
+            //Check if password exists in txt-file
+            while (commonPWline != null && !commonPWline.isEmpty()) {
+                if (commonPWline.contains(password)) {
+                    return false;
+                }
+                commonPWline = commonPWread.readLine();
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
     public static boolean checkStringNotEmpty(String text){

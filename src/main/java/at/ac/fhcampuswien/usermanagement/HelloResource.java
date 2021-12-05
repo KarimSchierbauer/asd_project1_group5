@@ -174,6 +174,12 @@ public class HelloResource {
                         .entity("Eines der Passwörter ist leer")
                         .build();
             }
+            if (!Utility.checkPWnotCommon(changePasswordDTO.getPassword1()) || !Utility.checkPWnotCommon(changePasswordDTO.getPassword2())) {
+                return Response
+                        .status(Response.Status.BAD_REQUEST)
+                        .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
+                        .build();
+            }
             if (!Utility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
