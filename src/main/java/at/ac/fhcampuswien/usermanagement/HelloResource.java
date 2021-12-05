@@ -3,6 +3,7 @@ package at.ac.fhcampuswien.usermanagement;
 import at.ac.fhcampuswien.usermanagement.infrastructure.database.UserService;
 import at.ac.fhcampuswien.usermanagement.models.ChangePasswordDTO;
 import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
+import at.ac.fhcampuswien.usermanagement.util.LoginLockoutService;
 import at.ac.fhcampuswien.usermanagement.util.SessionUtility;
 import at.ac.fhcampuswien.usermanagement.util.Utility;
 
@@ -65,12 +66,18 @@ public class HelloResource {
     @Produces("text/plain")
     public Response login(NewUserDTO newUserDTO) {
         String message;
+        if (LoginLockoutService.isLockedOut(newUserDTO.getUsername())) {
+            return Response
+                    .status(Response.Status.FORBIDDEN)
+                    .entity("Zu viele Fehlversuche")
+                    .build();
+        }
         if(new UserService().checkUser(newUserDTO)){
             message = "User erfolgreich eingeloggt";
             UUID sessionId = SessionUtility.createNewSessionForUser(newUserDTO);
             return Response.status(Response.Status.OK).entity(message).header(SessionHeader, sessionId).build();
         }
-        //TODO: implement method to check max. 3 login tries
+        LoginLockoutService.failedLogin(newUserDTO.getUsername());
         message = "Username oder Passwort nicht korrekt";
         return Response.status(Response.Status.UNAUTHORIZED).entity(message).build();
     }
