@@ -6,9 +6,13 @@ import java.util.*;
 
 public class SessionUtility {
 
+    private SessionUtility() {
+
+    }
+
     private static final int ONE = 1;
 
-    private static Hashtable<UUID, Session> sessionsTable = new Hashtable();
+    private static HashMap<UUID, Session> sessionsTable = new HashMap<>();
 
     public static UUID createNewSessionForUser(NewUserDTO newUserDTO){
         Session session = new Session(newUserDTO);

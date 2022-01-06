@@ -10,6 +10,10 @@ import java.util.List;
 
 public class PasswordUtility {
 
+    private PasswordUtility(){
+
+    }
+
     private static final String SPECIAL_CHARACTER_REGEX = ".*[!@#$%*()'+,-./:;<=>?\\[\\]^_`{|}]+.*";
     private static final int PASSWORD_MAX_LENGTH = 255;
     private static final int PASSWORD_MIN_LENGTH = 3;
@@ -33,12 +37,13 @@ public class PasswordUtility {
 
             String file = PasswordUtility.class.getResource("/10kcommonPW.txt").getFile();
             FileReader commonPw = new FileReader(file);
-            BufferedReader commonPwRead = new BufferedReader(commonPw);
+            try (BufferedReader commonPwRead = new BufferedReader(commonPw)) {
 
-            String commonPwLine = commonPwRead.readLine();
-            while (commonPwLine != null){
-                passwords.add(commonPwLine);
-                commonPwLine = commonPwRead.readLine();
+                String commonPwLine = commonPwRead.readLine();
+                while (commonPwLine != null) {
+                    passwords.add(commonPwLine);
+                    commonPwLine = commonPwRead.readLine();
+                }
             }
             passwordList = passwords;
         }
@@ -64,7 +69,7 @@ public class PasswordUtility {
         return password.length() > PASSWORD_MAX_LENGTH;
     }
 
-    public static boolean PwContainsSpecialChars(String password){
+    public static boolean pwContainsSpecialChars(String password){
         return password.matches(SPECIAL_CHARACTER_REGEX);
     }
 
@@ -76,7 +81,7 @@ public class PasswordUtility {
         if (!checkPwNotCommon(passwordToCheckValidity))
             return "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.";
 
-        if (PwContainsSpecialChars(passwordToCheckValidity))
+        if (pwContainsSpecialChars(passwordToCheckValidity))
             return "Passwort muss ein Sonderzeichen enthalten.";
 
         return null;
@@ -95,7 +100,7 @@ public class PasswordUtility {
         if (checkPwTooLong(initialPassword))
             return "Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.";
 
-        if (!PwContainsSpecialChars(initialPassword))
+        if (!pwContainsSpecialChars(initialPassword))
             return "Passwort muss ein Sonderzeichen enthalten.";
 
         return null;

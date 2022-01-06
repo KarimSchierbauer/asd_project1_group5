@@ -7,6 +7,10 @@ import java.util.UUID;
 
 public class ResponseUtility {
 
+    private ResponseUtility(){
+
+    }
+
     public static Response badRequest(String errorMessage) {
         return Response
                 .status(Response.Status.BAD_REQUEST)
