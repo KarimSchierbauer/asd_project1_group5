@@ -45,7 +45,6 @@ public class PasswordUtility {
     }
 
     public static boolean checkPwNotCommon(String password){
-        //Check if password is longer than 3 characters
         if (password.length() <= 3) {
             return false;
         }
