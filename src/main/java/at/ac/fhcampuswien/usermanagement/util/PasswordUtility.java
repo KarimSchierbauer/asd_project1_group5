@@ -10,6 +10,9 @@ import java.util.List;
 
 public class PasswordUtility {
 
+    private static final String SPECIAL_CHARACTER_REGEX = ".*[!@#$%*()'+,-./:;<=>?\\[\\]^_`{|}]+.*";
+    private static final int PASSWORD_MAX_LENGTH = 255;
+    private static final int PASSWORD_MIN_LENGTH = 3;
     private static List<String> passwordList;
 
     public static String hashPW(String password){
@@ -45,8 +48,7 @@ public class PasswordUtility {
     }
 
     public static boolean checkPwNotCommon(String password){
-        //Check if password is longer than 3 characters
-        if (password.length() <= 3) {
+        if (password.length() <= PASSWORD_MIN_LENGTH) {
             return false;
         }
 
@@ -60,12 +62,11 @@ public class PasswordUtility {
     }
 
     public static boolean checkPwTooLong(String password){
-        return password.length() > 255;
+        return password.length() > PASSWORD_MAX_LENGTH;
     }
 
     public static boolean PwContainsSpecialChars(String password){
-        String specialCharacterRegex = ".*[!@#$%*()'+,-./:;<=>?\\[\\]^_`{|}]+.*";
-        return password.matches(specialCharacterRegex);
+        return password.matches(SPECIAL_CHARACTER_REGEX);
     }
 
     public static boolean checkStringNotEmpty(String text){
@@ -82,20 +83,20 @@ public class PasswordUtility {
         return null;
     }
 
-    public static String checkValidity(String password1, String password2) {
-        if (checkStringNotEmpty(password1) || checkStringNotEmpty(password2))
+    public static String checkValidity(String initialPassword, String repeatedPassword) {
+        if (checkStringNotEmpty(initialPassword) || checkStringNotEmpty(repeatedPassword))
             return "Eines der Passwörter ist leer";
 
-        if (!checkIdenticalPW(password1, password2))
+        if (!checkIdenticalPW(initialPassword, repeatedPassword))
             return "Kennwörter nicht gleich ausgeben";
 
-        if (!checkPwNotCommon(password1))
+        if (!checkPwNotCommon(initialPassword))
             return "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.";
 
-        if (checkPwTooLong(password1))
+        if (checkPwTooLong(initialPassword))
             return "Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.";
 
-        if (!PwContainsSpecialChars(password1))
+        if (!PwContainsSpecialChars(initialPassword))
             return "Passwort muss ein Sonderzeichen enthalten.";
 
         return null;

@@ -18,7 +18,7 @@ public class ResponseUtility {
         return Response
                 .status(Response.Status.OK)
                 .entity(message)
-                .header(UserManagement.SessionHeader, sessionId)
+                .header(UserManagement.SESSION_HEADER, sessionId)
                 .build();
     }
 
@@ -30,7 +30,7 @@ public class ResponseUtility {
     }
 
     public static Response missingSession() {
-        return badRequest("missing header '" + UserManagement.SessionHeader + "'");
+        return badRequest("Header fehlt '" + UserManagement.SESSION_HEADER + "'");
     }
 
     public static Response userSuccessfullyInserted(UUID newSessionId) {
@@ -65,44 +65,44 @@ public class ResponseUtility {
     }
 
     public static Response loggedInAs(String username) {
-        return okResponse("logged in as: '" + username + "'");
+        return okResponse("Eingeloggt als: '" + username + "'");
     }
 
     public static Response invalidSession() {
         return Response
                 .status(Response.Status.UNAUTHORIZED)
-                .entity("Session is not valid")
+                .entity("Sitzung ist nicht gültig")
                 .build();
     }
 
     public static Response badSessionId() {
         return Response
                 .status(Response.Status.BAD_REQUEST)
-                .entity("Bad SessionId")
+                .entity("Ungültige Sitzungs ID")
                 .build();
     }
 
     public static Response loggedOut() {
-        return okResponse("Successfully logged out");
+        return okResponse("Erfolgreich ausgeloggt");
     }
 
     public static Response wantToDeleteAccount() {
         return Response
                 .status(Response.Status.OK)
                 .entity("Wollen Sie den Account wirklich löschen? Sind Sie sich den Konsequenzen bewusst? Verstehen Sie was Sie tun?")
-                .header(UserManagement.TransactionHeader, UUID.randomUUID())
+                .header(UserManagement.TRANSACTION_HEADER, UUID.randomUUID())
                 .build();
     }
 
     public static Response couldNotDeleteUser() {
         return Response
                 .status(Response.Status.BAD_REQUEST)
-                .entity("Couldn't delete user")
+                .entity("User konnte nicht gelöscht werden")
                 .build();
     }
 
     public static Response userSuccessfullyDeleted() {
-        return okResponse("Successfully deleted User");
+        return okResponse("User erfolgreich gelöscht");
     }
 
     public static Response error() {
@@ -116,6 +116,13 @@ public class ResponseUtility {
         return Response
                 .status(Response.Status.OK)
                 .entity("Passwort wurde erfolgreich geändert")
+                .build();
+    }
+
+    public static Response userNotFound() {
+        return Response
+                .status(Response.Status.BAD_REQUEST)
+                .entity("Der User wurde nicht gefunden")
                 .build();
     }
 }

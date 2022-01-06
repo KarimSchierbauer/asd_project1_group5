@@ -5,6 +5,9 @@ import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 import java.util.Date;
 
 public class Session {
+
+    private static final int COMPARISON_EQUAL = 0;
+
     private NewUserDTO newUserDTO;
     private Date validUntil;
 
@@ -19,9 +22,8 @@ public class Session {
     }
 
     public boolean getIsStillValid(){
-        if (validUntil.compareTo(SessionUtility.currentDate()) < 0) {
+        if (validUntil.compareTo(SessionUtility.currentDate()) < COMPARISON_EQUAL)
             return false;
-        }
 
         updateValidUntil();
         return true;

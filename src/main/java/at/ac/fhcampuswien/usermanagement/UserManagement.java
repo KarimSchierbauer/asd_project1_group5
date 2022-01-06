@@ -16,8 +16,8 @@ import java.util.UUID;
 
 @Path("/user")
 public class UserManagement {
-    public static final String SessionHeader = "SessionId";
-    public static final String TransactionHeader = "TransactionId";
+    public static final String SESSION_HEADER = "SessionId";
+    public static final String TRANSACTION_HEADER = "TransactionId";
 
     @POST
     @Path("/register")
@@ -58,7 +58,7 @@ public class UserManagement {
     @GET
     @Path("/isSessionActive")
     @Produces("text/plain")
-    public Response isSessionActive(@HeaderParam(SessionHeader) UUID sessionId) {
+    public Response isSessionActive(@HeaderParam(SESSION_HEADER) UUID sessionId) {
         if (sessionId == null)
             return ResponseUtility.missingSession();
 
@@ -66,13 +66,17 @@ public class UserManagement {
             return ResponseUtility.invalidSession();
 
         NewUserDTO user = SessionUtility.getUser(sessionId);
+
+        if(user == null)
+            return ResponseUtility.userNotFound();
+
         return ResponseUtility.loggedInAs(user.getUsername());
     }
 
     @POST
     @Path("/logout")
     @Produces("text/plain")
-    public Response logout(@HeaderParam(SessionHeader) UUID sessionId) {
+    public Response logout(@HeaderParam(SESSION_HEADER) UUID sessionId) {
         if (sessionId == null)
             return ResponseUtility.missingSession();
 
@@ -88,7 +92,7 @@ public class UserManagement {
     @Path("/account")
     @Produces("text/plain")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response deleteAccount(@HeaderParam(SessionHeader) UUID sessionId, @HeaderParam(TransactionHeader) UUID transactionId) {
+    public Response deleteAccount(@HeaderParam(SESSION_HEADER) UUID sessionId, @HeaderParam(TRANSACTION_HEADER) UUID transactionId) {
         if (sessionId == null)
             return ResponseUtility.missingSession();
 
@@ -99,6 +103,10 @@ public class UserManagement {
             return ResponseUtility.badSessionId();
 
         NewUserDTO user = SessionUtility.getUser(sessionId);
+
+        if(user == null)
+            return ResponseUtility.userNotFound();
+
         boolean deletionWasSuccessful = new UserService().deleteUser(user.getUsername());
 
         if (!deletionWasSuccessful)
@@ -112,7 +120,7 @@ public class UserManagement {
     @PUT
     @Path("/updatePW")
     @Produces("text/plain")
-    public Response updatePW(@HeaderParam(SessionHeader) UUID sessionId, ChangePasswordDTO changePasswordDTO) {
+    public Response updatePW(@HeaderParam(SESSION_HEADER) UUID sessionId, ChangePasswordDTO changePasswordDTO) {
         if (sessionId == null)
             return ResponseUtility.missingSession();
 
@@ -120,6 +128,9 @@ public class UserManagement {
             return ResponseUtility.badSessionId();
 
         NewUserDTO user = SessionUtility.getUser(sessionId);
+
+        if(user == null)
+            return ResponseUtility.userNotFound();
 
         String validationErrorMessage = PasswordUtility.checkValidity(changePasswordDTO.getInitialPassword(), changePasswordDTO.getRepeatedPassword());
         if (validationErrorMessage != null)

@@ -7,13 +7,13 @@ import java.sql.*;
 
 public class UserService {
 
-    private static final String connectionBaseUrl = "jdbc:postgresql://localhost:5432/db_usermanager";
-    private static final String connectionClass = "org.postgresql.Driver";
+    private static final String CONNECTION_BASE_URL = "jdbc:postgresql://localhost:5432/db_usermanager";
+    private static final String CONNECTION_CLASS = "org.postgresql.Driver";
 
     private Connection getConnection(){
         try {
-            Class.forName(connectionClass);
-            return DriverManager.getConnection(connectionBaseUrl,
+            Class.forName(CONNECTION_CLASS);
+            return DriverManager.getConnection(CONNECTION_BASE_URL,
                     "username", "password");
         } catch (Exception e) {
             e.printStackTrace();
@@ -37,7 +37,6 @@ public class UserService {
         try {
             Statement connectionStatement = connection.createStatement();
             String sqlStatement = String.format(sqlQuery, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashPw);
-            System.out.println(sqlStatement);
             connectionStatement.executeUpdate(sqlStatement);
             connection.close();
             return true;
