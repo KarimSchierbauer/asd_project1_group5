@@ -71,4 +71,33 @@ public class PasswordUtility {
     public static boolean checkStringNotEmpty(String text){
         return (text == null || text.isEmpty());
     }
+
+    public static String checkValidity(String passwordToCheckValidity) {
+        if (!checkPwNotCommon(passwordToCheckValidity))
+            return "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.";
+
+        if (PwContainsSpecialChars(passwordToCheckValidity))
+            return "Passwort muss ein Sonderzeichen enthalten.";
+
+        return null;
+    }
+
+    public static String checkValidity(String password1, String password2) {
+        if (checkStringNotEmpty(password1) || checkStringNotEmpty(password2))
+            return "Eines der Passwörter ist leer";
+
+        if (!checkIdenticalPW(password1, password2))
+            return "Kennwörter nicht gleich ausgeben";
+
+        if (!checkPwNotCommon(password1))
+            return "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.";
+
+        if (checkPwTooLong(password1))
+            return "Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.";
+
+        if (!PwContainsSpecialChars(password1))
+            return "Passwort muss ein Sonderzeichen enthalten.";
+
+        return null;
+    }
 }
