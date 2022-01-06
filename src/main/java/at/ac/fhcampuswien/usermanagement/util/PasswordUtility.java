@@ -16,7 +16,6 @@ public class PasswordUtility {
     private static List<String> passwordList;
 
     public static String hashPW(String password){
-
         return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 

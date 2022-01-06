@@ -9,12 +9,16 @@ public class UserService {
 
     private static final String CONNECTION_BASE_URL = "jdbc:postgresql://localhost:5432/db_usermanager";
     private static final String CONNECTION_CLASS = "org.postgresql.Driver";
+    private static final String CONNECTION_USERNAME = "username";
+    private static final String CONNECTION_PASSWORD = "passw0rd";
+    private static final String USERNAME_COLUMN = "username";
+    private static final String PASSWORD_COLUMN = "password";
 
     private Connection getConnection(){
         try {
             Class.forName(CONNECTION_CLASS);
             return DriverManager.getConnection(CONNECTION_BASE_URL,
-                    "username", "password");
+                    CONNECTION_USERNAME, CONNECTION_PASSWORD);
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -55,12 +59,8 @@ public class UserService {
             sqlQuery.setString(1, username);
             ResultSet rs = sqlQuery.executeQuery();
             while (rs.next()) {
-                String usernameFromDb = rs.getString("username");
-                if (usernameFromDb == null || usernameFromDb.isEmpty()) {
-                    return false;
-                } else {
-                    return true;
-                }
+                String usernameFromDb = rs.getString(USERNAME_COLUMN);
+                return usernameFromDb != null && !usernameFromDb.isEmpty();
             }
             sqlQuery.close();
             connection.close();
@@ -78,11 +78,11 @@ public class UserService {
             sqlQuery.setString(1, newUserDTO.getUsername());
             ResultSet rs = sqlQuery.executeQuery();
             while (rs.next()) {
-                String usernameFromDb = rs.getString("username");
+                String usernameFromDb = rs.getString(USERNAME_COLUMN);
                 if(!usernameFromDb.equals(newUserDTO.getUsername())){
                     continue;
                 }
-                String passwordFromDb = rs.getString("password");
+                String passwordFromDb = rs.getString(PASSWORD_COLUMN);
                 if (PasswordUtility.checkPW(newUserDTO.getPassword(), passwordFromDb)) {
                     return true;
                 }
