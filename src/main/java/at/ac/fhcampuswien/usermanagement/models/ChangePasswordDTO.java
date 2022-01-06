@@ -1,25 +1,25 @@
 package at.ac.fhcampuswien.usermanagement.models;
 
 public class ChangePasswordDTO {
-    private String password1;
-    private String password2;
+    private String initialPassword;
+    private String repeatedPassword;
 
     public ChangePasswordDTO() {
     }
 
-    public String getPassword1() {
-        return password1;
+    public String getInitialPassword() {
+        return initialPassword;
     }
 
-    public void setPassword1(String password1) {
-        this.password1 = password1;
+    public void setInitialPassword(String initialPassword) {
+        this.initialPassword = initialPassword;
     }
 
-    public String getPassword2() {
-        return password2;
+    public String getRepeatedPassword() {
+        return repeatedPassword;
     }
 
-    public void setPassword2(String password2) {
-        this.password2 = password2;
+    public void setRepeatedPassword(String repeatedPassword) {
+        this.repeatedPassword = repeatedPassword;
     }
 }

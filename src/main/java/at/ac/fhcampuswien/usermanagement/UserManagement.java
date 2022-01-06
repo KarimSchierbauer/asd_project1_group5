@@ -36,13 +36,13 @@ public class UserManagement {
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces("text/plain")
     public Response register(NewUserDTO newUserDTO) {
-        if (!PasswordUtility.checkPWnotCommon(newUserDTO.getPassword())) {
+        if (!PasswordUtility.checkPwNotCommon(newUserDTO.getPassword())) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                     .build();
         }
-        if (!PasswordUtility.PWcontainsspecialchars(newUserDTO.getPassword())) {
+        if (!PasswordUtility.PwContainsSpecialChars(newUserDTO.getPassword())) {
             return Response
                     .status(Response.Status.BAD_REQUEST)
                     .entity("Passwort muss ein Sonderzeichen enthalten.")
@@ -89,20 +89,20 @@ public class UserManagement {
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("missing header '" + SessionHeader + "'")
+                    .entity("Header fehlt '" + SessionHeader + "'")
                     .build();
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
             NewUserDTO user = SessionUtility.getUser(sessionId);
             return Response
                     .status(Response.Status.OK)
-                    .entity("logged in as: '" + user.getUsername() + "'")
+                    .entity("Eingeloggt als: '" + user.getUsername() + "'")
                     .build();
         }
         else {
             return Response
                     .status(Response.Status.UNAUTHORIZED)
-                    .entity("Session is not valid")
+                    .entity("Sitzung ist nicht gültig!")
                     .build();
         }
     }
@@ -114,20 +114,20 @@ public class UserManagement {
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("missing header '" + SessionHeader + "'")
+                    .entity("Header fehlt '" + SessionHeader + "'")
                     .build();
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
             SessionUtility.closeSession(sessionId);
             return Response
                     .status(Response.Status.OK)
-                    .entity("Successfully logged out")
+                    .entity("Erfolgreich ausgeloggt")
                     .build();
         }
         else {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("Bad SessionId")
+                    .entity("Ungültige Sitzungs ID")
                     .build();
         }
     }
@@ -140,7 +140,7 @@ public class UserManagement {
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("missing header '" + SessionHeader + "'")
+                    .entity("Header fehlt '" + SessionHeader + "'")
                     .build();
 
         if(transactionId == null){
@@ -158,20 +158,20 @@ public class UserManagement {
                 SessionUtility.closeSession(sessionId);
                 return Response
                         .status(Response.Status.OK)
-                        .entity("Successfully deleted User")
+                        .entity("User erfolgreich gelöscht")
                         .build();
             }
             else {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
-                        .entity("Couldn't delete user")
+                        .entity("User konnte nicht gelöscht werden!")
                         .build();
             }
         }
         else {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("Bad SessionId")
+                    .entity("Ungültige Sitzungs ID")
                     .build();
         }
     }
@@ -183,43 +183,43 @@ public class UserManagement {
         if (sessionId == null)
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("missing header '" + SessionHeader + "'")
+                    .entity("Header fehlt '" + SessionHeader + "'")
                     .build();
 
         if (SessionUtility.isSessionStillActive(sessionId)) {
             NewUserDTO user = SessionUtility.getUser(sessionId);
-            if (PasswordUtility.checkStringNotEmpty(changePasswordDTO.getPassword1()) || PasswordUtility.checkStringNotEmpty(changePasswordDTO.getPassword2())) {
+            if (PasswordUtility.checkStringNotEmpty(changePasswordDTO.getInitialPassword()) || PasswordUtility.checkStringNotEmpty(changePasswordDTO.getRepeatedPassword())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Eines der Passwörter ist leer")
                         .build();
             }
-            if (!PasswordUtility.checkPWnotCommon(changePasswordDTO.getPassword1()) || !PasswordUtility.checkPWnotCommon(changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.checkPwNotCommon(changePasswordDTO.getInitialPassword()) || !PasswordUtility.checkPwNotCommon(changePasswordDTO.getRepeatedPassword())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.")
                         .build();
             }
-            if (PasswordUtility.checkPWtoolong(changePasswordDTO.getPassword1()) || PasswordUtility.checkPWtoolong(changePasswordDTO.getPassword2())) {
+            if (PasswordUtility.checkPwTooLong(changePasswordDTO.getInitialPassword()) || PasswordUtility.checkPwTooLong(changePasswordDTO.getRepeatedPassword())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort zu lang! Bitte geben Sie ein anderes Passwort ein.")
                         .build();
             }
 
-            if (!PasswordUtility.PWcontainsspecialchars(changePasswordDTO.getPassword1()) || !PasswordUtility.PWcontainsspecialchars(changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.PwContainsSpecialChars(changePasswordDTO.getInitialPassword()) || !PasswordUtility.PwContainsSpecialChars(changePasswordDTO.getRepeatedPassword())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Passwort muss ein Sonderzeichen enthalten.")
                         .build();
             }
-            if (!PasswordUtility.checkIdenticalPW(changePasswordDTO.getPassword1(), changePasswordDTO.getPassword2())) {
+            if (!PasswordUtility.checkIdenticalPW(changePasswordDTO.getInitialPassword(), changePasswordDTO.getRepeatedPassword())) {
                 return Response
                         .status(Response.Status.BAD_REQUEST)
                         .entity("Kennwörter nicht gleich ausgeben")
                         .build();
             } else {
-                boolean didWork = new UserService().changePW(user, changePasswordDTO.getPassword1());
+                boolean didWork = new UserService().changePW(user, changePasswordDTO.getInitialPassword());
                 if(didWork){
                     return Response
                             .status(Response.Status.OK)
@@ -234,7 +234,7 @@ public class UserManagement {
         }else {
             return Response
                     .status(Response.Status.BAD_REQUEST)
-                    .entity("Bad SessionId")
+                    .entity("Ungültige Sitzungs ID")
                     .build();
         }
     }

@@ -10,43 +10,41 @@ import java.util.List;
 
 public class PasswordUtility {
 
-    private static List<String> _passwords;
+    private static List<String> passwordList;
 
     public static String hashPW(String password){
-        String hashpw = BCrypt.hashpw(password, BCrypt.gensalt());
 
-        return hashpw;
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     public static boolean checkPW(String password, String hash){
-        boolean result = BCrypt.checkpw(password, hash);
-        return result;
+        return BCrypt.checkpw(password, hash);
     }
 
-    public static boolean checkIdenticalPW(String password1, String password2){
-        return password1.equals(password2);
+    public static boolean checkIdenticalPW(String initialPassword, String repeatedPassword){
+        return initialPassword.equals(repeatedPassword);
     }
 
     private static List<String> getPasswords() throws IOException {
-        if(_passwords == null){
+        if(passwordList == null){
             ArrayList<String> passwords = new ArrayList<>();
 
             String file = PasswordUtility.class.getResource("/10kcommonPW.txt").getFile();
-            FileReader commonPW = new FileReader(file);
-            BufferedReader commonPWread = new BufferedReader(commonPW);
+            FileReader commonPw = new FileReader(file);
+            BufferedReader commonPwRead = new BufferedReader(commonPw);
 
-            String commonPWline = commonPWread.readLine();
-            while (commonPWline != null){
-                passwords.add(commonPWline);
-                commonPWline = commonPWread.readLine();
+            String commonPwLine = commonPwRead.readLine();
+            while (commonPwLine != null){
+                passwords.add(commonPwLine);
+                commonPwLine = commonPwRead.readLine();
             }
-            _passwords = passwords;
+            passwordList = passwords;
         }
 
-        return _passwords;
+        return passwordList;
     }
 
-    public static boolean checkPWnotCommon(String password){
+    public static boolean checkPwNotCommon(String password){
         //Check if password is longer than 3 characters
         if (password.length() <= 3) {
             return false;
@@ -55,28 +53,22 @@ public class PasswordUtility {
         try {
             List<String> passwords = getPasswords();
             return !passwords.contains(password);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
 
-    public static boolean checkPWtoolong(String password){
+    public static boolean checkPwTooLong(String password){
         return password.length() > 255;
     }
 
-    public static boolean PWcontainsspecialchars(String password){
+    public static boolean PwContainsSpecialChars(String password){
         String specialCharacterRegex = ".*[!@#$%*()'+,-./:;<=>?\\[\\]^_`{|}]+.*";
         return password.matches(specialCharacterRegex);
     }
 
     public static boolean checkStringNotEmpty(String text){
-        boolean result = ((text == null || text.isEmpty()) ? true : false);
-        return result;
+        return (text == null || text.isEmpty());
     }
 }

@@ -6,12 +6,15 @@ import at.ac.fhcampuswien.usermanagement.util.PasswordUtility;
 import java.sql.*;
 
 public class UserService {
+
+    private static final String connectionBaseUrl = "jdbc:postgresql://localhost:5432/db_usermanager";
+    private static final String connectionClass = "org.postgresql.Driver";
+
     private Connection getConnection(){
         try {
-            Class.forName("org.postgresql.Driver");
-            Connection c = DriverManager.getConnection("jdbc:postgresql://localhost:5432/db_usermanager",
+            Class.forName(connectionClass);
+            return DriverManager.getConnection(connectionBaseUrl,
                     "username", "password");
-            return c;
         } catch (Exception e) {
             e.printStackTrace();
             System.err.println(e.getClass().getName()+": "+e.getMessage());
@@ -28,14 +31,14 @@ public class UserService {
             return false;
         }
 
-        String rawCommand = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s');";
-        String hashpw = PasswordUtility.hashPW(newUserDTO.getPassword());
+        String sqlQuery = "INSERT INTO userSchema.userEntity (firstname,lastname,username,password) VALUES ('%s', '%s', '%s', '%s');";
+        String hashPw = PasswordUtility.hashPW(newUserDTO.getPassword());
 
         try {
-            Statement stmt = connection.createStatement();
-            String sql = String.format(rawCommand, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashpw);
-            System.out.println(sql);
-            stmt.executeUpdate(sql);
+            Statement connectionStatement = connection.createStatement();
+            String sqlStatement = String.format(sqlQuery, newUserDTO.getFirstname(), newUserDTO.getLastname(), newUserDTO.getUsername(), hashPw);
+            System.out.println(sqlStatement);
+            connectionStatement.executeUpdate(sqlStatement);
             connection.close();
             return true;
         } catch (SQLException e) {
@@ -49,9 +52,9 @@ public class UserService {
         Connection connection = getConnection();
 
         try {
-            PreparedStatement rawCommand = connection.prepareStatement("SELECT username FROM userSchema.userEntity WHERE username = ?");
-            rawCommand.setString(1, username);
-            ResultSet rs = rawCommand.executeQuery();
+            PreparedStatement sqlQuery = connection.prepareStatement("SELECT username FROM userSchema.userEntity WHERE username = ?");
+            sqlQuery.setString(1, username);
+            ResultSet rs = sqlQuery.executeQuery();
             while (rs.next()) {
                 String usernameFromDb = rs.getString("username");
                 if (usernameFromDb == null || usernameFromDb.isEmpty()) {
@@ -60,7 +63,7 @@ public class UserService {
                     return true;
                 }
             }
-            rawCommand.close();
+            sqlQuery.close();
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -72,9 +75,9 @@ public class UserService {
         Connection connection = getConnection();
 
         try {
-            PreparedStatement rawCommand = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=?");
-            rawCommand.setString(1, newUserDTO.getUsername());
-            ResultSet rs = rawCommand.executeQuery();
+            PreparedStatement sqlQuery = connection.prepareStatement("SELECT username, password FROM userSchema.userEntity WHERE username=?");
+            sqlQuery.setString(1, newUserDTO.getUsername());
+            ResultSet rs = sqlQuery.executeQuery();
             while (rs.next()) {
                 String usernameFromDb = rs.getString("username");
                 if(!usernameFromDb.equals(newUserDTO.getUsername())){
@@ -85,7 +88,7 @@ public class UserService {
                     return true;
                 }
             }
-            rawCommand.close();
+            sqlQuery.close();
             connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -97,10 +100,10 @@ public class UserService {
         Connection connection = getConnection();
 
         try {
-            PreparedStatement rawCommand = connection.prepareStatement("DELETE FROM userSchema.userEntity WHERE username = ?");
-            rawCommand.setString(1, username);
-            int updatedRows = rawCommand.executeUpdate();
-            rawCommand.close();
+            PreparedStatement sqlQuery = connection.prepareStatement("DELETE FROM userSchema.userEntity WHERE username = ?");
+            sqlQuery.setString(1, username);
+            int updatedRows = sqlQuery.executeUpdate();
+            sqlQuery.close();
             connection.close();
             return updatedRows > 0;
         }
@@ -116,14 +119,14 @@ public class UserService {
         String newHashedPW = PasswordUtility.hashPW(newUserDTO.getPassword());
 
         try{
-            PreparedStatement rawCommand = connection.prepareStatement("UPDATE userSchema.userEntity SET password = ? WHERE username = ?");
-            rawCommand.setString(1, newHashedPW);
-            rawCommand.setString(2, newUserDTO.getUsername());
-            rawCommand.executeUpdate();
-            boolean b = (checkUser(newUserDTO));
-            rawCommand.close();
+            PreparedStatement sqlQuery = connection.prepareStatement("UPDATE userSchema.userEntity SET password = ? WHERE username = ?");
+            sqlQuery.setString(1, newHashedPW);
+            sqlQuery.setString(2, newUserDTO.getUsername());
+            sqlQuery.executeUpdate();
+            boolean userExists = (checkUser(newUserDTO));
+            sqlQuery.close();
             connection.close();
-            return b;
+            return userExists;
         }
         catch(SQLException e){
             e.printStackTrace();

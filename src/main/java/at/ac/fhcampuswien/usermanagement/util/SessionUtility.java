@@ -5,28 +5,27 @@ import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 import java.util.*;
 
 public class SessionUtility {
-    private static Hashtable<UUID, Session> _sessions = new Hashtable();
+    private static Hashtable<UUID, Session> sessionsTable = new Hashtable();
 
     public static UUID createNewSessionForUser(NewUserDTO newUserDTO){
         Session session = new Session(newUserDTO);
 
         UUID thisSessionId = UUID.randomUUID();
-        _sessions.put(thisSessionId, session);
+        sessionsTable.put(thisSessionId, session);
         return thisSessionId;
     }
 
     public static boolean isSessionStillActive(UUID sessionId){
-        if (_sessions.containsKey(sessionId)) {
-            Session session = _sessions.get(sessionId);
-            if (session.getIsStillValid())
-                return true;
+        if (sessionsTable.containsKey(sessionId)) {
+            Session session = sessionsTable.get(sessionId);
+            return session.getIsStillValid();
         }
         return false;
     }
 
     public static NewUserDTO getUser(UUID sessionId){
-        if (_sessions.containsKey(sessionId)) {
-            Session session = _sessions.get(sessionId);
+        if (sessionsTable.containsKey(sessionId)) {
+            Session session = sessionsTable.get(sessionId);
             if (session.getIsStillValid())
                 return session.getNewUserDTO();
         }
@@ -34,8 +33,7 @@ public class SessionUtility {
     }
 
     public static void closeSession(UUID sessionId){
-        if(_sessions.containsKey(sessionId))
-            _sessions.remove(sessionId);
+        sessionsTable.remove(sessionId);
     }
 
     public static Date currentDate(){
