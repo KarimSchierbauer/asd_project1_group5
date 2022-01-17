@@ -35,4 +35,4 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create Docker Image for Development Environment
-        run: docker build . --file Dockerfile --tag $IMAGE_NAME
+        run: docker build . --file Dockerfile
