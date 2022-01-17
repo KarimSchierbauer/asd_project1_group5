@@ -46,7 +46,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v3
         with:
-          images: itsmetommy/hello-github-actions
+          images: karimschierbauer/asd_project1_group5
           tags: |
             type=ref,event=branch
             type=sha
