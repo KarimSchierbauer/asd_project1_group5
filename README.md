@@ -1,3 +1,6 @@
+![Docker Automated build](https://img.shields.io/docker/automated/karimschierbauer/asd_project1_group5)
+[![codecov](https://codecov.io/gh/KarimSchierbauer/asd_project1_group5/branch/main/graph/badge.svg?token=DGDB860W8C)](https://codecov.io/gh/KarimSchierbauer/asd_project1_group5)
+
 # User Manager
 ## asd_project1_group5
 
