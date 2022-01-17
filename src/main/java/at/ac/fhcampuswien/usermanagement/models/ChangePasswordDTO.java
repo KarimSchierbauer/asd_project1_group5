@@ -4,9 +4,6 @@ public class ChangePasswordDTO {
     private String initialPassword;
     private String repeatedPassword;
 
-    public ChangePasswordDTO() {
-    }
-
     public String getInitialPassword() {
         return initialPassword;
     }

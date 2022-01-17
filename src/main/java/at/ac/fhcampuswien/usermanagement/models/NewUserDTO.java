@@ -6,9 +6,6 @@ public class NewUserDTO {
     private String username;
     private String password;
 
-    public NewUserDTO() {
-    }
-
     public String getFirstname() {
         return firstname;
     }

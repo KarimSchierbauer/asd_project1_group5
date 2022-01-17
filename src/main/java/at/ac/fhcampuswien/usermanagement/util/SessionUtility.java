@@ -5,7 +5,14 @@ import at.ac.fhcampuswien.usermanagement.models.NewUserDTO;
 import java.util.*;
 
 public class SessionUtility {
-    private static Hashtable<UUID, Session> sessionsTable = new Hashtable();
+
+    private SessionUtility() {
+
+    }
+
+    private static final int ONE = 1;
+
+    private static HashMap<UUID, Session> sessionsTable = new HashMap<>();
 
     public static UUID createNewSessionForUser(NewUserDTO newUserDTO){
         Session session = new Session(newUserDTO);
@@ -43,7 +50,7 @@ public class SessionUtility {
 
     public static Date sessionValidUntil(){
         Calendar sessionValidUntil = Calendar.getInstance();
-        sessionValidUntil.add(Calendar.MINUTE, 1);
+        sessionValidUntil.add(Calendar.MINUTE, ONE);
         return sessionValidUntil.getTime();
     }
 }

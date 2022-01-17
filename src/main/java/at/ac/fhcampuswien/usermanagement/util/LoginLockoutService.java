@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 public class LoginLockoutService {
 
-    private static final int loginCount = 3;
+    private LoginLockoutService(){
+    }
 
-    private static ArrayList<String> badLogins = new ArrayList<String>();
+    private static final int LOGIN_COUNT = 3;
+
+    private static ArrayList<String> badLogins = new ArrayList<>();
 
     public static boolean isLockedOut(String username){
-        return badLogins.stream().filter(s -> s.equals(username)).count() >= loginCount;
+        return badLogins.stream().filter(s -> s.equals(username)).count() >= LOGIN_COUNT;
     }
 
     public static void failedLogin(String username){
