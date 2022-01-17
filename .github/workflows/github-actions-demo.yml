@@ -20,7 +20,6 @@ jobs:
 
   build:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
@@ -30,3 +29,10 @@ jobs:
           distribution: 'adopt'
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
+
+  dockerize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Create Docker Image for Development Environment
+        run: docker build . --file Dockerfile --tag $IMAGE_NAME
