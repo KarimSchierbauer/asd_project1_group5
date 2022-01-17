@@ -17,6 +17,10 @@
         <junit.version>5.7.1</junit.version>
         <sonar.organization>karimschierbauer</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <docker.image.prefix>karimschierbauer</docker.image.prefix>
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
@@ -76,4 +80,18 @@
             </plugin>
         </plugins>
     </build>
+
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://www.opensource.org/licenses/mit-license.php</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>FH Campus Wien</name>
+        <url> https://www.fh-campuswien.ac.at//</url>
+    </organization>
+
 </project>
