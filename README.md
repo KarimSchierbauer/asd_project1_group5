@@ -16,6 +16,8 @@ You have to download the server [here](https://www.wildfly.org/downloads/) and a
 
 The application is reachable via [localhost:8080](https://localhost:8080/)
 
+The container images are hosted on [DockerHub](https://hub.docker.com/r/karimschierbauer/asd_project1_group5)
+
 To create and start the database navigate to the "docker-compose.yaml" file and execute "docker-compose up -d"
 The "docker-compose.yaml" file does include the default credentials.
 
