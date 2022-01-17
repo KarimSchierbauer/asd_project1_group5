@@ -1,3 +1,5 @@
+![Docker Automated build](https://img.shields.io/docker/automated/karimschierbauer/asd_project1_group5)
+
 # asd_project1_group5
 Advanced Software Development project - User manager
 
