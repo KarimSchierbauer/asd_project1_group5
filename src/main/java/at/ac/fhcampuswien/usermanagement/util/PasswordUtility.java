@@ -81,7 +81,7 @@ public class PasswordUtility {
         if (!checkPwNotCommon(passwordToCheckValidity))
             return "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein.";
 
-        if (pwContainsSpecialChars(passwordToCheckValidity))
+        if (!pwContainsSpecialChars(passwordToCheckValidity))
             return "Passwort muss ein Sonderzeichen enthalten.";
 
         return null;

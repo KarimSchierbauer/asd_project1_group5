@@ -39,4 +39,40 @@ public class PasswordUtilityTests {
 
         assertEquals(areEqualExpected, passwordsAreIdentical);;
     }
+
+    private static Stream<Arguments> testParametersFor_PasswordUtility_checkValidity_1() {
+        return Stream.of(
+                Arguments.of("TestPAssw0Rd+", null),
+                Arguments.of("password", "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein."),
+                Arguments.of("aoeu", "Passwort muss ein Sonderzeichen enthalten.")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("testParametersFor_PasswordUtility_checkValidity_1")
+    public void PasswordUtility_checkValidity_1(String passwordToCheck, String expectedValidityOutput){
+        String validityOutput = PasswordUtility.checkValidity(passwordToCheck);
+
+        assertEquals(expectedValidityOutput, validityOutput);
+    }
+
+    private static Stream<Arguments> testParametersFor_PasswordUtility_checkValidity_2() {
+        return Stream.of(
+                Arguments.of("TestPAssw0Rd+", null, "Eines der Passwörter ist leer"),
+                Arguments.of(null, "TestPAssw0Rd+", "Eines der Passwörter ist leer"),
+                Arguments.of("TestPAssw0Rd+", "aoeu+", "Kennwörter nicht gleich ausgeben"),
+                Arguments.of("password", "password", "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein."),
+                Arguments.of("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", "Passwort zu lang! Bitte geben Sie ein anderes Passwort ein."),
+                Arguments.of("TestPAssw0Rd", "TestPAssw0Rd", "Passwort muss ein Sonderzeichen enthalten."),
+                Arguments.of("TestPAssw0Rd+", "TestPAssw0Rd+", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource("testParametersFor_PasswordUtility_checkValidity_2")
+    public void PasswordUtility_checkValidity_2(String passwordToCheck1, String passwordToCheck2, String expectedValidityOutput){
+        String validityOutput = PasswordUtility.checkValidity(passwordToCheck1, passwordToCheck2);
+
+        assertEquals(expectedValidityOutput, validityOutput);
+    }
 }
