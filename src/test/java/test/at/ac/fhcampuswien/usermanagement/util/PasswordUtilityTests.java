@@ -1,6 +1,6 @@
 package test.at.ac.fhcampuswien.usermanagement.util;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import at.ac.fhcampuswien.usermanagement.util.PasswordUtility;
 import org.junit.jupiter.api.Test;
