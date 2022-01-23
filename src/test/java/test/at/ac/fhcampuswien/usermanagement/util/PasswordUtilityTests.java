@@ -3,7 +3,7 @@ package test.at.ac.fhcampuswien.usermanagement.util;
 import static org.junit.Assert.*;
 
 import at.ac.fhcampuswien.usermanagement.util.PasswordUtility;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -59,9 +59,11 @@ public class PasswordUtilityTests {
     private static Stream<Arguments> testParametersFor_PasswordUtility_checkValidity_2() {
         return Stream.of(
                 Arguments.of("TestPAssw0Rd+", null, "Eines der Passwörter ist leer"),
+                Arguments.of("TestPAssw0Rd+", "", "Eines der Passwörter ist leer"),
                 Arguments.of(null, "TestPAssw0Rd+", "Eines der Passwörter ist leer"),
                 Arguments.of("TestPAssw0Rd+", "aoeu+", "Kennwörter nicht gleich ausgeben"),
                 Arguments.of("password", "password", "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein."),
+                Arguments.of("ad", "ad", "Passwort unsicher! Bitte geben Sie ein anderes Passwort ein."),
                 Arguments.of("12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", "12345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890", "Passwort zu lang! Bitte geben Sie ein anderes Passwort ein."),
                 Arguments.of("TestPAssw0Rd", "TestPAssw0Rd", "Passwort muss ein Sonderzeichen enthalten."),
                 Arguments.of("TestPAssw0Rd+", "TestPAssw0Rd+", null)
