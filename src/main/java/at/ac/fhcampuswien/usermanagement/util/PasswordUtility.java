@@ -35,7 +35,7 @@ public class PasswordUtility {
         if(passwordList == null){
             ArrayList<String> passwords = new ArrayList<>();
 
-            String file = PasswordUtility.class.getResource("/10kcommonPW.txt").getFile();
+            String file = PasswordUtility.class.getResource("/commonPWlist/10kcommonPW.txt").getFile();
             FileReader commonPw = new FileReader(file);
             try (BufferedReader commonPwRead = new BufferedReader(commonPw)) {
 
