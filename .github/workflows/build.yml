@@ -42,6 +42,6 @@ jobs:
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=KarimSchierbauer_asd_project1_group5
 
       - name: CodeCov Report
-        uses: codecov/codecov-actions@v2
+        uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
